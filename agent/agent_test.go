@@ -9,11 +9,10 @@ import (
 )
 
 func TestAbleToRunConditionMachineBootIDMatch(t *testing.T) {
-	uf := unit.NewSystemdUnitFile(`[X-Fleet]
+	u := unit.NewUnit(`[X-Fleet]
 X-ConditionMachineBootID=XYZ
 `)
-	payload := job.NewJobPayload("example.service", *uf)
-	job := job.NewJob("example.service", *payload)
+	job := job.NewJob("example.service", *u)
 
 	mach := machine.New("XYZ", "", make(map[string]string, 0))
 	agent := Agent{machine: mach, state: NewState()}
@@ -23,11 +22,10 @@ X-ConditionMachineBootID=XYZ
 }
 
 func TestAbleToRunConditionMachineBootIDMismatch(t *testing.T) {
-	uf := unit.NewSystemdUnitFile(`[X-Fleet]
+	u := unit.NewUnit(`[X-Fleet]
 X-ConditionMachineBootID=XYZ
 `)
-	payload := job.NewJobPayload("example.service", *uf)
-	job := job.NewJob("example.service", *payload)
+	job := job.NewJob("example.service", *u)
 
 	mach := machine.New("123", "", make(map[string]string, 0))
 	agent := Agent{machine: mach, state: NewState()}

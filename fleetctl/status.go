@@ -42,13 +42,13 @@ func printUnitStatus(jobName string) int {
 	if j == nil {
 		fmt.Fprintf(os.Stderr, "Job %s does not exist.\n", jobName)
 		os.Exit(1)
-	} else if j.PayloadState == nil {
+	} else if j.UnitState == nil {
 		fmt.Fprintf(os.Stderr, "Job %s does not appear to be running.\n", jobName)
 		return 1
 	}
 
 	cmd := fmt.Sprintf("systemctl status -l %s", jobName)
-	retcode, err := runCommand(cmd, j.PayloadState.MachineState)
+	retcode, err := runCommand(cmd, j.UnitState.MachineState)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed running command over SSH: %v\n", err)
 		return 1

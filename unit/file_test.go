@@ -29,7 +29,7 @@ ExecStop=echo post
 		},
 	}
 
-	unitFile := NewSystemdUnitFile(contents)
+	unitFile := NewUnit(contents)
 
 	if !reflect.DeepEqual(expected, unitFile.Contents) {
 		t.Fatalf("Map func did not produce expected output.\nActual=%v\nExpected=%v", unitFile.Contents, expected)
@@ -41,14 +41,14 @@ func TestSerializeDeserialize(t *testing.T) {
 [Unit]
 Description = Foo
 `
-	deserialized := NewSystemdUnitFile(contents)
+	deserialized := NewUnit(contents)
 	section := deserialized.Contents["Unit"]
 	if val, ok := section["Description"]; !ok || val[0] != "Foo" {
 		t.Errorf("Failed to persist data through serialize/deserialize: %v", val)
 	}
 
 	serialized := deserialized.String()
-	deserialized = NewSystemdUnitFile(serialized)
+	deserialized = NewUnit(serialized)
 
 	section = deserialized.Contents["Unit"]
 	if val, ok := section["Description"]; !ok || val[0] != "Foo" {
@@ -66,7 +66,7 @@ ExecStart=echo "ping";
 ExecStop=echo "pong";
 `
 
-	unitFile := NewSystemdUnitFile(contents)
+	unitFile := NewUnit(contents)
 	if unitFile.Description() != "Foo" {
 		t.Fatalf("Unit.Description is incorrect")
 	}
@@ -81,7 +81,7 @@ ExecStart=echo "ping";
 ExecStop=echo "pong";
 `
 
-	unitFile := NewSystemdUnitFile(contents)
+	unitFile := NewUnit(contents)
 	if unitFile.Description() != "" {
 		t.Fatalf("Unit.Description is incorrect")
 	}
@@ -108,8 +108,8 @@ func TestLegacyContents(t *testing.T) {
 		},
 	}
 
-	uf := &SystemdUnitFile{Contents: contents}
-	actual := uf.LegacyContents()
+	uf := Unit{Contents: contents}
+	actual := getLegacyUnitContents(uf)
 
 	if !reflect.DeepEqual(actual, expected) {
 		t.Fatalf("Map func did not produce expected output.\nActual=%v\nExpected=%v", actual, expected)
@@ -137,7 +137,7 @@ func TestNewSystemdUnitFileFromLegacyContents(t *testing.T) {
 		},
 	}
 
-	actual := NewSystemdUnitFileFromLegacyContents(legacy).Contents
+	actual := NewUnitFromLegacyContents(legacy).Contents
 
 	if !reflect.DeepEqual(actual, expected) {
 		t.Fatalf("Map func did not produce expected output.\nActual=%v\nExpected=%v", actual, expected)

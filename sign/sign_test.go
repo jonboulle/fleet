@@ -10,12 +10,12 @@ import (
 )
 
 const (
-	privateKeyFile            = "../fixtures/insecure_private_key"
-	authorizedKeyFile         = "../fixtures/authorized_keys"
-	nonexistAuthorizedKeyFile = "../fixtures/nonexist_authorized_keys"
-	signatureForGood          = "903a528536371744b4f7f3720e531321f128e164254600dba3753e26aa0bd4d6f86cd9da2f4463aca90549427f26547df821ff403722825651abbdb5a674b9bab07ed89a0b89e249cf93341325dd243300dc72a168b0faf06d3e154efd7e42f24aba312407b658634cb89e2f37d19cb7341feba9aca591d09894da4b9d5fe2713f69408a8d7c3fe28fbe07e80b2b1617158b510aadb487e37baf33a2497ffeb2e2e4091ec1a025adc59acae1ea28ee41632806389ffefc47272ef37405cf1c30933e427b8996106df6ca4cd4e5fa8c8f27d4ef74b8a4632d687ef2ccb520015034c72573ed4c95d927b53732bde72641eeb438c8e8f9374d091ba8deb2bfd929"
-	firstAuthorizedKey        = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMmq9hew++XUyYKDRIuq4K3VaVJUaE76LscrJ4Ov+UPJ0nTm0/VH2z0eOX9fQijmZ3c0/uMN03bdTfZG2w4TLYwxkgtIgch6nYG540oeKGHfcx3D/LYQ1isTwlLFelSAnDjaIsiLmxv0XHc4lojhLEtjf1OyHMf06snQscizYTmin29/7qSehf9WBEAPxdMuBGWYMi4yHnDn0cT4b7iowzZ+LQFjhZDthz2WTdSqofHbjPQSLGm65IotCJh8WRROKYPVLqnlZtQV7ntkzxsDSVpv5gsGMfZpuF1LGkQ89p/dCvpShoiklORMDA0Stm0wSemoKkwWvaYTbiyj1ZreXl\n"
-	secondAuthorizedKey       = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==\n"
+	privateKeyFile             = "../fixtures/insecure_private_key"
+	authorizedKeysFile         = "../fixtures/authorized_keys"
+	nonexistAuthorizedKeysFile = "../fixtures/nonexist_authorized_keys"
+	signatureForGood           = "903a528536371744b4f7f3720e531321f128e164254600dba3753e26aa0bd4d6f86cd9da2f4463aca90549427f26547df821ff403722825651abbdb5a674b9bab07ed89a0b89e249cf93341325dd243300dc72a168b0faf06d3e154efd7e42f24aba312407b658634cb89e2f37d19cb7341feba9aca591d09894da4b9d5fe2713f69408a8d7c3fe28fbe07e80b2b1617158b510aadb487e37baf33a2497ffeb2e2e4091ec1a025adc59acae1ea28ee41632806389ffefc47272ef37405cf1c30933e427b8996106df6ca4cd4e5fa8c8f27d4ef74b8a4632d687ef2ccb520015034c72573ed4c95d927b53732bde72641eeb438c8e8f9374d091ba8deb2bfd929"
+	firstAuthorizedKey         = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMmq9hew++XUyYKDRIuq4K3VaVJUaE76LscrJ4Ov+UPJ0nTm0/VH2z0eOX9fQijmZ3c0/uMN03bdTfZG2w4TLYwxkgtIgch6nYG540oeKGHfcx3D/LYQ1isTwlLFelSAnDjaIsiLmxv0XHc4lojhLEtjf1OyHMf06snQscizYTmin29/7qSehf9WBEAPxdMuBGWYMi4yHnDn0cT4b7iowzZ+LQFjhZDthz2WTdSqofHbjPQSLGm65IotCJh8WRROKYPVLqnlZtQV7ntkzxsDSVpv5gsGMfZpuF1LGkQ89p/dCvpShoiklORMDA0Stm0wSemoKkwWvaYTbiyj1ZreXl\n"
+	secondAuthorizedKey        = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==\n"
 )
 
 type badStubKeyring struct {
@@ -73,7 +73,7 @@ func initSign(t *testing.T) (*SignatureCreator, *SignatureVerifier) {
 
 // TestNewSignatureVerifierFromFile tests initializing SignatureVerifier from file
 func TestNewSignatureVerifierFromFile(t *testing.T) {
-	v, err := NewSignatureVerifierFromAuthorizedKeysFile(authorizedKeyFile)
+	v, err := NewSignatureVerifierFromAuthorizedKeysFile(authorizedKeysFile)
 	if err != nil {
 		t.Fatal("Fail to read from authorized key file:", err)
 	}
@@ -89,7 +89,7 @@ func TestNewSignatureVerifierFromFile(t *testing.T) {
 
 // TestBadNewSignatureVerifierFromFile tests initializing SignatureVerifier from file incorrectly
 func TestBadNewSignatureVerifierFromFile(t *testing.T) {
-	_, err := NewSignatureVerifierFromAuthorizedKeysFile(nonexistAuthorizedKeyFile)
+	_, err := NewSignatureVerifierFromAuthorizedKeysFile(nonexistAuthorizedKeysFile)
 	if err == nil {
 		t.Fatal("succeed to new signature verifier")
 	}
@@ -142,11 +142,11 @@ func TestSign(t *testing.T) {
 		t.Fatal("Expect tag %v instead of %v", tag, sig.Tag)
 	}
 
-	if len(sig.Signs) == 0 {
+	if len(sig.Signatures) == 0 {
 		t.Fatal("Expected signatures for data 'Good'")
 	}
 
-	if bytes.Compare(sig.Signs[0].Blob, expectedSig.Blob) != 0 {
+	if bytes.Compare(sig.Signatures[0].Blob, expectedSig.Blob) != 0 {
 		t.Fatal("Wrong signature for data 'Good'")
 	}
 }
