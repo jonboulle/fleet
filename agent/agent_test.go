@@ -38,11 +38,10 @@ X-ConditionMachineBootID=XYZ
 func TestHasConflictExistingMatch(t *testing.T) {
 	state := NewState()
 
-	u := unit.NewSystemdUnitFile(`[X-Fleet]
+	u := unit.NewUnit(`[X-Fleet]
 X-Conflicts=other.service
 `)
-	p := job.NewJobPayload("example.service", *u)
-	j := job.NewJob("example.service", *p)
+	j := job.NewJob("example.service", *u)
 	state.TrackJob(j)
 	state.SetTargetState(j.Name, job.JobStateLoaded)
 
@@ -60,9 +59,8 @@ X-Conflicts=other.service
 func TestHasConflictPotentialMatch(t *testing.T) {
 	state := NewState()
 
-	u := unit.NewSystemdUnitFile(`[X-Fleet]`)
-	p := job.NewJobPayload("example.service", *u)
-	j := job.NewJob("example.service", *p)
+	u := unit.NewUnit(`[X-Fleet]`)
+	j := job.NewJob("example.service", *u)
 	state.TrackJob(j)
 	state.SetTargetState(j.Name, job.JobStateLoaded)
 
@@ -81,9 +79,8 @@ func TestHasConflictPotentialMatch(t *testing.T) {
 func TestHasConflictNoMatch(t *testing.T) {
 	state := NewState()
 
-	u := unit.NewSystemdUnitFile(`[X-Fleet]`)
-	p := job.NewJobPayload("example.service", *u)
-	j := job.NewJob("example.service", *p)
+	u := unit.NewUnit(`[X-Fleet]`)
+	j := job.NewJob("example.service", *u)
 	state.TrackJob(j)
 	state.SetTargetState(j.Name, job.JobStateLoaded)
 
@@ -99,11 +96,10 @@ func TestHasConflictNoMatch(t *testing.T) {
 func TestHasConflictComplexGlob(t *testing.T) {
 	state := NewState()
 
-	u := unit.NewSystemdUnitFile(`[X-Fleet]
+	u := unit.NewUnit(`[X-Fleet]
 X-Conflicts=*.[1-9].service
 `)
-	p := job.NewJobPayload("example.service", *u)
-	j := job.NewJob("example.service", *p)
+	j := job.NewJob("example.service", *u)
 	state.TrackJob(j)
 	state.SetTargetState(j.Name, job.JobStateLoaded)
 
