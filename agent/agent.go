@@ -32,8 +32,8 @@ type Agent struct {
 	events   *event.EventBus
 	machine  *machine.Machine
 	ttl      time.Duration
-	// verifier is used to verify job payload. A nil one implies that
-	// all payloads are accepted.
+	// verifier is used to verify the contents of a job's Unit.
+	// A nil verifier implies that all Units are accepted.
 	verifier *sign.SignatureVerifier
 
 	state   *AgentState
@@ -321,13 +321,27 @@ func (a *Agent) FetchJob(jobName string) *job.Job {
 	return j
 }
 
+// VerifyJob attempts to verify the integrity of the given Job by checking the
+// signature against a SignatureSet stored in its repository.
 func (a *Agent) VerifyJob(j *job.Job) bool {
 	if a.verifier == nil {
 		return true
 	}
-	// TODO(jonboulle): fixme to deal with Legacy jobs
+	var err error
+	var ok bool
+	// First check for a modern SignatureSet
 	ss := a.registry.GetSignatureSetOfJob(j.Name)
-	ok, err := a.verifier.VerifyJob(j, ss)
+	if ss != nil {
+		ok, err = a.verifier.VerifyJob(j, ss)
+	} else {
+		// In case this is a legacy Job, check if there is a Payload signature to verify
+		ljp, e := a.registry.GetLegacyPayload(j.Name)
+		if ljp == nil || e != nil {
+			return false
+		}
+		ss := a.registry.GetSignatureSetOfLegacyPayload(j.Name)
+		ok, err = a.verifier.VerifyLegacyPayload(ljp, ss)
+	}
 	if err != nil {
 		log.V(1).Infof("Error verifying signature of Job(%s): %v", j.Name, err)
 		return false

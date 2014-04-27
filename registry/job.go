@@ -138,12 +138,14 @@ type jobModel struct {
 
 // DestroyJob removes a Job object from the repository, along with any legacy
 // associated Payload. It also decrements the reference count on any associated
-// Unit, and removes the Unit if this is the only Job referencing it.
+// Unit, and removes the Unit if this is the only Job referencing it. Finally, it removes any SignatureSets associated with the Job.
 func (r *Registry) DestroyJob(jobName string) {
 	key := path.Join(keyPrefix, jobPrefix, jobName)
 	r.etcd.Delete(key, true)
 	// TODO(jonboulle): add unit reference counting and actually destroying Units
+	r.destroySignatureSetOfJob(jobName)
 	r.destroyLegacyPayload(jobName)
+	r.destroySignatureSetOfLegacyPayload(jobName)
 }
 
 // destroyLegacyPayload removes an old-style Payload from the registry

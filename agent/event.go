@@ -64,7 +64,7 @@ func (eh *EventHandler) HandleEventJobScheduled(ev event.Event) {
 	}
 
 	if !eh.agent.VerifyJob(j) {
-		log.Errorf("EventJobScheduled(%s): Failed to verify job", j.Name)
+		log.Errorf("EventJobScheduled(%s): Failed to verify Job", j.Name)
 		return
 	}
 

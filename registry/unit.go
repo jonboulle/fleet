@@ -34,8 +34,8 @@ func (r *Registry) storeOrGetUnit(u unit.Unit) (err error) {
 	return
 }
 
-// getUnitFromLegacyPayload tries to extract a Unit from a legacy JobPayload of the given name
-func (r *Registry) getUnitFromLegacyPayload(name string) (*unit.Unit, error) {
+// getLegacyPayload tries to return a legacy JobPayload of the given name
+func (r *Registry) GetLegacyPayload(name string) (*unit.LegacyJobPayload, error) {
 	key := path.Join(keyPrefix, payloadPrefix, name)
 	resp, err := r.etcd.Get(key, true, true)
 
@@ -50,8 +50,18 @@ func (r *Registry) getUnitFromLegacyPayload(name string) (*unit.Unit, error) {
 	if ljp.Name != name {
 		return nil, errors.New(fmt.Sprintf("Payload name in Registry (%s) does not match expected name (%s)", ljp.Name, name))
 	}
-	// After the unmarshaling, the LegacyPayload should contain a fully hydrated Unit
-	return &ljp.Unit, nil
+	return &ljp, nil
+}
+
+// getUnitFromLegacyPayload tries to extract a Unit from a legacy JobPayload of the given name
+func (r *Registry) getUnitFromLegacyPayload(name string) (*unit.Unit, error) {
+	ljp, err := r.GetLegacyPayload(name)
+	if err != nil {
+		return nil, err
+	} else {
+		// After the unmarshaling, the LegacyPayload should contain a fully hydrated Unit
+		return &ljp.Unit, nil
+	}
 }
 
 // getUnitByHash retrieves from the Registry the Unit associated with the given Hash

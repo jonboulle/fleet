@@ -47,19 +47,17 @@ func (r *Registry) GetSignatureSetOfJob(name string) *sign.SignatureSet {
 	return r.GetSignatureSet(sign.TagForJob(name))
 }
 
-func (r *Registry) DestroySignatureSetOfJob(name string) {
+func (r *Registry) destroySignatureSetOfJob(name string) {
 	r.DestroySignatureSet(sign.TagForJob(name))
 }
 
-/* TODO(jonboulle): fix these
-func (r *Registry) getSignatureSetOfLegacyPayload(name string) *sign.SignatureSet {
+func (r *Registry) GetSignatureSetOfLegacyPayload(name string) *sign.SignatureSet {
 	return r.GetSignatureSet(sign.TagForPayload(name))
 }
 
 func (r *Registry) destroySignatureSetOfLegacyPayload(name string) {
 	r.DestroySignatureSet(sign.TagForPayload(name))
 }
-*/
 
 func signatureSetPath(s string) string {
 	return path.Join(keyPrefix, signingPrefix, s)

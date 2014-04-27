@@ -5,6 +5,7 @@ import (
 	"path"
 
 	"github.com/coreos/fleet/job"
+	"github.com/coreos/fleet/unit"
 )
 
 const (
@@ -31,36 +32,27 @@ func (sc *SignatureCreator) SignJob(j *job.Job) (*SignatureSet, error) {
 }
 
 // VerifyJob verifies the provided Job's Unit using the given SignatureSet
-func (sv *SignatureVerifier) VerifyJob(j *job.Job, s *SignatureSet) (bool, error) {
-	if s == nil {
-		return false, errors.New("signature to verify is nil")
+func (sv *SignatureVerifier) VerifyJob(j *job.Job, ss *SignatureSet) (bool, error) {
+	if ss == nil {
+		return false, errors.New("SignatureSet to verify is nil")
 	}
 
 	tag := TagForJob(j.Name)
-	if tag != s.Tag {
+	if tag != ss.Tag {
 		return false, errors.New("unmatched unit and signature")
 	}
 
 	data, _ := marshal(j.Unit)
-	return sv.Verify(data, s)
+	return sv.Verify(data, ss)
 }
 
-/*
-
-// SignPayload signs the provided JobPayload, returning a SignatureSet
-func (sc *SignatureCreator) SignPayload(jp *job.JobPayload) (*SignatureSet, error) {
-	tag := TagForPayload(payloadPrefix, jp.Name)
-	data, _ := marshal(jp)
-	return sc.Sign(tag, data)
-}
-
-// VerifyPayload verifies the payload using signature
-func (sv *SignatureVerifier) VerifyPayload(jp *job.JobPayload, s *SignatureSet) (bool, error) {
+// VerifyLegacyPayload verifies the payload using signature
+func (sv *SignatureVerifier) VerifyLegacyPayload(jp *unit.LegacyJobPayload, s *SignatureSet) (bool, error) {
 	if s == nil {
 		return false, errors.New("signature to verify is nil")
 	}
 
-	TagForPayload(payloadPrefix, jp.Name)
+	tag := TagForPayload(jp.Name)
 	if tag != s.Tag {
 		return false, errors.New("unmatched payload and signature")
 	}
@@ -68,4 +60,3 @@ func (sv *SignatureVerifier) VerifyPayload(jp *job.JobPayload, s *SignatureSet) 
 	data, _ := marshal(jp)
 	return sv.Verify(data, s)
 }
-*/
