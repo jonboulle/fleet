@@ -1,4 +1,4 @@
-package main
+package fleet
 
 import (
 	"encoding/json"
@@ -24,7 +24,7 @@ const (
 	DefaultConfigFile = "/etc/fleet/fleet.conf"
 )
 
-func main() {
+func Main() {
 	// We use a FlagSets since glog adds a bunch of flags we do not want to publish
 	userset := flag.NewFlagSet("fleet", flag.ExitOnError)
 	printVersion := userset.Bool("version", false, "Print the version and exit")

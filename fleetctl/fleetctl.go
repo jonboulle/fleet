@@ -1,4 +1,4 @@
-package main
+package fleetctl
 
 import (
 	"crypto/tls"
@@ -122,7 +122,7 @@ func getFlags(flagset *flag.FlagSet) (flags []*flag.Flag) {
 	return
 }
 
-func main() {
+func Main() {
 	// parse global arguments
 	globalFlagset.Parse(os.Args[1:])
 
