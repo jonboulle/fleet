@@ -54,6 +54,7 @@ func ParseJobState(s string) (JobState, error) {
 	return js, err
 }
 
+// Job is a legacy construct encapsulating a scheduled unit in fleet
 type Job struct {
 	Name            string
 	State           *JobState
@@ -61,6 +62,22 @@ type Job struct {
 	TargetMachineID string
 	Unit            unit.Unit
 	UnitState       *unit.UnitState
+}
+
+// ScheduledJob represents a Job known by fleet and encapsulates its current scheduling state
+// (list-unit-schedule)
+type ScheduledJob struct {
+	Name            string
+	State           *JobState
+	TargetState     JobState
+	TargetMachineID string
+}
+
+// A Job consists of a Unit known by a given name
+// (list-unit-files)
+type JobUnit struct {
+	Name string
+	Unit unit.Unit
 }
 
 // NewJob creates a new Job based on the given name and Unit.
