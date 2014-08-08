@@ -72,7 +72,7 @@ func runShowSchedule(args []string) (exit int) {
 		}
 	}
 
-	units, err := cAPI.ScheduledUnits()
+	units, err := cAPI.Schedule()
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error retrieving list of units from repository: %v\n", err)
