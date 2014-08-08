@@ -56,16 +56,25 @@ func ParseJobState(s string) (JobState, error) {
 
 // Job is a legacy construct encapsulating a scheduled unit in fleet
 type Job struct {
-	Name            string
-	State           *JobState
-	TargetState     JobState
-	TargetMachineID string
-	Unit            unit.Unit
-	UnitState       *unit.UnitState
+	Name      string
+	UnitState *unit.UnitState
+
+	ScheduledUnit
+	JobUnit
+}
+
+// NewJob creates a new Job based on the given name and Unit.  The returned Job
+// has a populated UnitHash and empty JobState and UnitState.
+func NewJob(name string, unit unit.Unit) *Job {
+	return &Job{
+		Name:          name,
+		UnitState:     nil,
+		ScheduledUnit: NewScheduledUnit(name),
+		JobUnit:       NewJobUnit(name, unit),
+	}
 }
 
 // ScheduledUnit represents a Unit known by fleet and encapsulates its current scheduling state
-// (list-unit-schedule)
 type ScheduledUnit struct {
 	Name            string
 	State           *JobState
@@ -73,24 +82,25 @@ type ScheduledUnit struct {
 	TargetMachineID string
 }
 
+func NewScheduledUnit(name string) ScheduledUnit {
+	return ScheduledUnit{
+		Name:            name,
+		State:           nil,
+		TargetState:     JobStateInactive,
+		TargetMachineID: "",
+	}
+}
+
 // JobUnit represents a Unit that has been submitted to fleet
-// (list-unit-files)
 type JobUnit struct {
 	Name string
 	Unit unit.Unit
 }
 
-// NewJob creates a new Job based on the given name and Unit.
-// The returned Job has a populated UnitHash and empty JobState and
-// UnitState. nil is returned on failure.
-func NewJob(name string, unit unit.Unit) *Job {
-	return &Job{
-		Name:            name,
-		State:           nil,
-		TargetState:     JobStateInactive,
-		TargetMachineID: "",
-		Unit:            unit,
-		UnitState:       nil,
+func NewJobUnit(name string, unit unit.Unit) JobUnit {
+	return JobUnit{
+		Name: name,
+		Unit: unit,
 	}
 }
 
