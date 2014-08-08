@@ -16,8 +16,8 @@ const (
 var (
 	showScheduleFieldsFlag string
 	cmdShowSchedule        = &Command{
-		Name:        "list-unit-schedule",
-		Summary:     "List the scheduling of units that exist in the cluster.",
+		Name:        "show-schedule",
+		Summary:     "Display the scheduling of units that exist in the cluster.",
 		Usage:       "[--fields]",
 		Description: `Display the current scheduling of units in the cluster.`,
 		Run:         runShowSchedule,
