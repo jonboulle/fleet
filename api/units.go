@@ -7,12 +7,15 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/coreos/fleet/client"
 	"github.com/coreos/fleet/job"
 	"github.com/coreos/fleet/log"
 	"github.com/coreos/fleet/pkg"
+	"github.com/coreos/fleet/registry"
 	"github.com/coreos/fleet/schema"
+	"github.com/coreos/fleet/unit"
 )
 
 func wireUpUnitsResource(mux *http.ServeMux, prefix string, cAPI client.API) {
@@ -205,6 +208,24 @@ func ValidateOptions(opts []*schema.UnitOption) error {
 }
 
 func (ur *unitsResource) create(rw http.ResponseWriter, name string, u *schema.Unit) {
+	un := unit.NewUnitNameInfo(name)
+	if un == nil {
+		sendError(rw, http.StatusConflict, errors.New("unit has bad name"))
+	}
+	if un.IsInstance() {
+		reg, ok := ur.cAPI.(registry.Registry)
+		if ok {
+			l, err := reg.LeaseRole(un.Template, "asdf", time.Second)
+			if err != nil {
+				log.Errorf("error acquiring lease on template: %v", err)
+				sendError(rw, http.StatusInternalServerError, nil)
+				return
+			} else if l == nil {
+				sendError(rw, http.StatusInternalServerError, errors.New("template modification in progress, try again later"))
+				return
+			}
+		}
+	}
 	if err := ur.cAPI.CreateUnit(u); err != nil {
 		log.Errorf("Failed creating Unit(%s) in Registry: %v", u.Name, err)
 		sendError(rw, http.StatusInternalServerError, nil)
