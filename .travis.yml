@@ -4,7 +4,10 @@ go:
   - 1.2
 
 install:
- - go get code.google.com/p/go.tools/cmd/cover
+  - go get code.google.com/p/go.tools/cmd/cover
+  - go get github.com/mattn/goveralls
+
 
 script:
- - ./test
+  - PKG=api ./test -cover
+  - goveralls -coverprofile=coverage/api.out -service=travis-ci -repotoken 5xTLMhBsl6sGWMADS5vonRuVdhNi6djbJ
