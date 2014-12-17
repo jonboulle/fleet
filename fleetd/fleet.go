@@ -21,6 +21,7 @@ import (
 	"os"
 	"os/signal"
 	"strings"
+	"sync"
 	"syscall"
 
 	"github.com/coreos/fleet/Godeps/_workspace/src/github.com/rakyll/globalconf"
@@ -83,8 +84,13 @@ func main() {
 	}
 	srv.Run()
 
+	srvMutex := sync.Mutex{}
+
 	reconfigure := func() {
 		log.Infof("Reloading configuration from %s", *cfgPath)
+
+		srvMutex.Lock()
+		defer srvMutex.Unlock()
 
 		cfg, err := getConfig(cfgset, *cfgPath)
 		if err != nil {
@@ -103,6 +109,10 @@ func main() {
 
 	shutdown := func() {
 		log.Infof("Gracefully shutting down")
+
+		srvMutex.Lock()
+		defer srvMutex.Unlock()
+
 		srv.Stop()
 		srv.Purge()
 		os.Exit(0)
@@ -110,6 +120,9 @@ func main() {
 
 	writeState := func() {
 		log.Infof("Dumping server state")
+
+		srvMutex.Lock()
+		defer srvMutex.Unlock()
 
 		encoded, err := json.Marshal(srv)
 		if err != nil {
