@@ -315,7 +315,7 @@ func TestUnitStatePublisherRunTiming(t *testing.T) {
 	}
 
 	bc := make(chan *unit.UnitStateHeartbeat)
-	sc := make(chan bool)
+	sc := make(chan struct{})
 	go func() {
 		usp.Run(bc, sc)
 	}()
@@ -444,7 +444,7 @@ func TestUnitStatePublisherRunQueuing(t *testing.T) {
 		clock:           clockwork.NewFakeClock(),
 	}
 	bc := make(chan *unit.UnitStateHeartbeat)
-	sc := make(chan bool)
+	sc := make(chan struct{})
 	go func() {
 		usp.Run(bc, sc)
 	}()
@@ -563,7 +563,7 @@ func TestUnitStatePublisherRunWithDelays(t *testing.T) {
 	}
 
 	bc := make(chan *unit.UnitStateHeartbeat)
-	sc := make(chan bool)
+	sc := make(chan struct{})
 	go func() {
 		usp.Run(bc, sc)
 	}()

@@ -57,7 +57,7 @@ func New(reg *registry.EtcdRegistry, rStream pkg.EventStream, mach machine.Machi
 	}
 }
 
-func (e *Engine) Run(ival time.Duration, stop chan bool) {
+func (e *Engine) Run(ival time.Duration, stop <-chan struct{}) {
 	leaseTTL := ival * 5
 	machID := e.machine.State().ID
 
