@@ -131,6 +131,7 @@ func New(cfg config.Config) (*Server, error) {
 		hrt:         hrt,
 		mon:         mon,
 		api:         apiServer,
+		killc:       make(chan struct{}),
 		stopc:       nil,
 		engineReconcileInterval: eIval,
 	}
@@ -183,6 +184,7 @@ func (s *Server) Run() {
 		func() { s.usGen.Run(beatc, s.stopc) },
 		func() { s.usPub.Run(beatc, s.stopc) },
 	} {
+		f := f
 		s.wg.Add(1)
 		go func() {
 			f()
